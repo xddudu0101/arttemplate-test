@@ -1,0 +1,111 @@
+<body class="h_body">
+<!--主体内容-->
+<div class="mui-content w_padd_01 det_con" id="wage_list">
+    <img class="examine-loading" src="../images/loading.gif" alt="薪资列表"/>
+</div>
+<script type="text/html" id="wage_con">
+    <ul class="wage-list">
+        {{each list as value i}}
+        <li class="wage-list-con">
+            <a href="#" class="det_top">
+                <span class="wage_time">{{value.Period}}</span>
+                <span class="wage_tag">{{value.Total}}</span>
+                <span class="wage_num">￥{{value.Total}}</span>
+                <img src="../images/arrow_right.png" alt=""/>
+            </a>
+            <div class="detail_con">
+                 {{if value.items != ''}}
+                <header class="mui-bar mui-bar-nav detail_con_close">
+                    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left "></a>
+                    <h1 class="mui-title">薪资详情</h1>
+                </header>
+                <div class="wage_detail">
+                    <div class="detail_time">2017年4月</div>
+                    <div class="h_det_li">本月工资实发<span class="detail_total">￥{{value.Total}}</span></div>
+                </div>
+
+                <span class="detail_tag">应发项</span>
+                {{each value.items as value i}}
+                {{if value.Mark == 1 && value.Amount != 0}}
+                <div class="h_det_li">{{value.Title}}<span class="wage_black">￥{{value.Amount}}</span></div>
+                {{/if}}
+                {{/each}}
+
+                <span class="detail_tag">扣减项</span>
+                {{each value.items as value i}}
+                {{if value.Mark == 2 && value.Amount != 0}}
+                <div class="h_det_li">{{value.Title}}<span class="h_color_orange">￥{{value.Amount}}</span></div>
+                 {{/if}}
+                {{/each}}
+                <span class="detail_tag">累计</span>
+                <div class="h_det_li">当年累计数额<span>￥--- {{value.Total}}</span></div>
+                <div class="h_det_li">本年应发合计<span>￥--- {{value.Total}}</span></div>
+                {{/if}}
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+</script>
+
+<script type="text/javascript">
+    var list = [
+        {
+            "Period": "2015-10",
+            "items": [
+                {
+                    "Title": "底薪",
+                    "Amount": "0.24",
+                    "Mark": 1
+                },
+                {
+                    "Title": "我是不应该出现的不应该出现的",
+                    "Amount": "0.00",
+                    "Mark": 2
+                },
+                {
+                    "Title": "应该扣税",
+                    "Amount": "1110.24",
+                    "Mark": 2
+                },
+                {
+                    "Title": "计薪",
+                    "Amount": "200.00",
+                    "Mark": 1
+                }
+            ],
+            "Total": 10
+        },
+        {
+            "Period": "2015-11",
+            "items": [],
+            "Total": 20
+        },
+        {
+            "Period": "2015-12",
+            "items": [],
+            "Total": 30
+        }
+    ];
+    var num = {
+        list: list
+    };
+    var wageListCon = template('wage_con', num);
+    document.getElementById('wage_list').innerHTML = wageListCon;
+</script>
+<script type="text/javascript">
+    //点击展开显示隐藏
+    $(document).on("click", ".wage-list-con a", function (event) {
+        event.preventDefault();
+        $(this).siblings('.detail_con').css('display', 'block');
+    });
+    $(document).on("click", ".detail_con_close", function (event) {
+        $('.detail_con').css('display', 'none');
+        jw.setTitle('薪资详情');
+        $('.wage-list-con').css('pointer-events', 'none');
+        setTimeout(function () {
+            $('.wage-list-con').css('pointer-events', 'auto');
+        }, 400);
+    });
+</script>
+
+</body>
